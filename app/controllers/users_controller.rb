@@ -4,46 +4,44 @@ class UsersController < ApplicationController
   
   # GET /users
   def index
-    @users = User.all 
-    render json: @users
-  end
-  
-  def new
+    users = User.all 
+    render json: users
   end
   
   # GET /users/:id
   def show
-    render json: @user
+    render json: user
   end
   
   # POST /users
   def create
     # byebug
-    @user = User.new(user_params)
-    if @user.save
-      render json: @user, status: 200  #created 
+    user = User.new(user_params)
+    if user.save
+      render json: user, status: 201  #created 
     else
-      render json: @user.errors, status: :unprocessable_entity  #422 status code
+      render json: user.errors, status: :unprocessable_entity  #422 status code
     end
   end
   
   # PATCH/PUT /users/1
   def update
-    if @user.update(user_params)
-      render json: @user, status: 200
+    if user.update(user_params)
+      render json: user, status: 200
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_entity
     end
   end
   
   # DELETE /users/1
   def destroy
-    @user.destroy
+    user.destroy
+    render json: {msg: 'User deleted successfully!'}
   end
   
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-    @user = User.find(params[:id])
+    user = User.find(params[:id])
   end
   
   # Only allow a trusted parameter "white list" through.
@@ -52,9 +50,9 @@ class UsersController < ApplicationController
   end
   
   def recommended_products 
-    if @user.favorite_brand.present?
-      @recommended_products = Product.where(brand_name: @user.favorite_brand)
-      render json: @recommended_products
+    if user.favorite_brand.present?
+      recommended_products = Product.where(brand_name: user.favorite_brand)
+      render json: recommended_products
     else
       render json: {error: "No fav brand here."}, status: :bad_request
     end

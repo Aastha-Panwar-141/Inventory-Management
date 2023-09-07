@@ -3,46 +3,43 @@ class ProductsController < ApplicationController
     
     # GET /products
     def index
-        @products = Product.all 
-        render json: @products
+        products = Product.all 
+        render json: products
     end
-    
-    def new
-    end
-    
+        
     # GET /products/:id
     def show
-        render json: @product
+        render json: product
     end
     
     # POST /products
     def create
         # byebug
-        @product = Product.new(product_params)
-        if @product.save
-            render json: @product, status: 200  #created 
+        product = Product.new(product_params)
+        if product.save
+            render json: product, status: 201  #created 
         else
-            render json: @product.errors, status: :unprocessable_entity  #422 status code
+            render json: product.errors, status: :unprocessable_entity  #422 status code
         end
     end
     
     # PATCH/PUT /products/1
     def update
-        if @product.update(product_params)
-            rendor json: @product, status: 200
+        if product.update(product_params)
+            rendor json: product, status: 200
         else
-            rendor json: @product.errors, status: :unprocessable_entity
+            rendor json: product.errors, status: :unprocessable_entity
         end
     end
     
     # DELETE /products/1
     def destroy
-        @product.destroy
+        product.destroy
     end
     
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-        @product = Product.find(params[:id])
+        product = Product.find(params[:id])
     end
     
     # Only allow a trusted parameter "white list" through.
@@ -53,8 +50,8 @@ class ProductsController < ApplicationController
     def search 
         name = params[:name]
         if name.present?
-            @products = Product.where("name LIKE ?", "%#{name}%")
-            render json: @products
+            products = Product.where("name LIKE ?", "%#{name}%")
+            render json: products
         else
             render json: {error: "Name parameter is required."}
         end
@@ -64,8 +61,8 @@ class ProductsController < ApplicationController
         # byebug
         brand = params[:brand_name]
         if brand.present?
-            @products = Product.where("brand_name LIKE ?", "%#{brand}%")
-            render json: @products
+            products = Product.where("brand_name LIKE ?", "%#{brand}%")
+            render json: products
         else
             render json: {error: "No product is available for this brand."}
         end
