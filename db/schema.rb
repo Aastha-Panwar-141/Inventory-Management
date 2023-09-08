@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_07_104242) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_08_105430) do
   create_table "carts", force: :cascade do |t|
-    t.integer "customer_id", null: false
     t.integer "product_variant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_carts_on_customer_id"
+    t.integer "customer_id"
     t.index ["product_variant_id"], name: "index_carts_on_product_variant_id"
   end
 
@@ -49,7 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_104242) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "carts", "customers"
   add_foreign_key "carts", "product_variants"
   add_foreign_key "product_variants", "products"
 end

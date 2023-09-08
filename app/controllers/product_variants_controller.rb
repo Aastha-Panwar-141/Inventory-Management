@@ -4,12 +4,12 @@ class ProductVariantsController < ApplicationController
     # GET /product_variants
     def index
         product_variants = ProductVariant.all 
-        render json: product_variants
+        render json: {product_variants: product_variants}
     end
         
     # GET /product_variants/:id
     def show
-        render json: product_variant
+        render json: {product_variant: @product_variant}
     end
     
     # POST /product_variants
@@ -17,7 +17,7 @@ class ProductVariantsController < ApplicationController
         # byebug
         product_variant = ProductVariant.new(product_variant_params)
         if product_variant.save
-            render json: product_variant, status: 201  #created 
+            render json: {result: 'Product variant created successfully!',created_record: product_variant}, status: 201  #created 
         else
             render json: product_variant.errors, status: :unprocessable_entity  #422 status code
         end
@@ -25,21 +25,29 @@ class ProductVariantsController < ApplicationController
     
     # PATCH/PUT /product_variants/1
     def update
-        if product_variant.update(product_variant_params)
-            render json: product_variant
+        # byebug
+        if @product_variant.update(product_variant_params)
+            render json: {result: 'Product updated successfully!',updated_record: @product_variant}
         else
-            render json: product_variant.errors, status: :unprocessable_entity
+            render json: @product_variant.errors, status: :unprocessable_entity
         end
     end
     
     # DELETE /product_variants/1
     def destroy
-        product_variant.destroy
+        @product_variant.destroy
+        render json: {result: "Record deleted successfully!", deleted_record: @product_variant}
+
     end
     
     # Use callbacks to share common setup or constraints between actions.
     def set_product_variant
-        product_variant = ProductVariant.find(params[:id])
+        # byebug
+        begin
+            @product_variant = ProductVariant.find(params[:id])
+        rescue ActiveRecord::RecordNotFound
+            render json: {error: 'No record found for given id.'}
+        end
     end
     
     # Only allow a trusted parameter "white list" through.

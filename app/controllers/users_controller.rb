@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   # GET /users
   def index
     users = User.all 
-    render json: users
+    render json: {users: users}
   end
   
   # GET /users/:id
   def show
-    render json: user
+    render json: {result: @user}
   end
   
   # POST /users
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     # byebug
     user = User.new(user_params)
     if user.save
-      render json: user, status: 201  #created 
+      render json: {result: 'User created successfully!', created_record: user}, status: 201  #created 
     else
       render json: user.errors, status: :unprocessable_entity  #422 status code
     end
@@ -26,35 +26,42 @@ class UsersController < ApplicationController
   
   # PATCH/PUT /users/1
   def update
-    if user.update(user_params)
-      render json: user, status: 200
+    if @user.update(user_params)
+      render json: {result: 'User updated successfully!',updated_record: @user}, status: 200
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
   
   # DELETE /users/1
   def destroy
-    user.destroy
-    render json: {msg: 'User deleted successfully!'}
+    @user.destroy
+    render json: {result: 'User deleted successfully!', deleted_record: @user}
+  end
+  
+  def recommended_products 
+    if @user.present?
+      fav_brand = @user.favorite_brand
+      recommended_products = Product.where(brand_name: fav_brand)
+      render json: {recommended_products: recommended_products}
+    else
+      render json: {error: "No records."}, status: :bad_request
+    end
   end
   
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-    user = User.find(params[:id])
+    begin
+      @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {error: 'No record found for given id.'}
+    end
   end
+  
   
   # Only allow a trusted parameter "white list" through.
   def user_params
     params.require(:user).permit(:email, :first_name, :last_name, :user_type, :favorite_brand)
   end
   
-  def recommended_products 
-    if user.favorite_brand.present?
-      recommended_products = Product.where(brand_name: user.favorite_brand)
-      render json: recommended_products
-    else
-      render json: {error: "No fav brand here."}, status: :bad_request
-    end
-  end
 end
