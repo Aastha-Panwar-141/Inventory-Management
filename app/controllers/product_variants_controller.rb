@@ -4,12 +4,14 @@ class ProductVariantsController < ApplicationController
     # GET /product_variants
     def index
         product_variants = ProductVariant.all 
-        render json: {product_variants: product_variants}
+        # render json: {product_variants: product_variants}
+        render json: product_variants
     end
         
     # GET /product_variants/:id
     def show
-        render json: {product_variant: @product_variant}
+        # render json: {product_variant: @product_variant}
+        render json: product_variant
     end
     
     # POST /product_variants

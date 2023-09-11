@@ -4,12 +4,14 @@ class ProductsController < ApplicationController
     # GET /products
     def index
         products = Product.all 
-        render json: {products: products}
+        render json: products, include: ['product_variants']
+        # render json: {products: products}, include: ['product_variants']
     end
     
     # GET /products/:id
     def show
-        render json: {product: @product}
+        # render json: {product: @product}, include: ['product_variants']
+        render json: @product
     end
     
     # POST /products
@@ -39,6 +41,29 @@ class ProductsController < ApplicationController
         render json: {result: "Record deleted successfully!", deleted_record: @product}
     end
     
+    
+    def search 
+      # byebug
+      name = params[:name]
+      if name.present?
+        products = Product.where("name LIKE ?", "%#{name}%")
+        render json: {result: products}
+      else
+        render json: {error: "No record found for given name."}
+      end
+    end
+    
+    def search_by_brand_name
+      # byebug
+      brand = params[:brand_name]
+      if brand.present?
+        products = Product.where("brand_name LIKE ?", "%#{brand}%")
+        render json: {result: products}
+      else
+        render json: {error: "No product is available for this brand."}
+      end
+    end
+    
     # Use callbacks to share common setup or constraints between actions.
     def set_product
         begin
@@ -53,27 +78,5 @@ class ProductsController < ApplicationController
         params.require(:product).permit(:vendor_id, :name, :brand_name)
     end
     
-    def search 
-        # byebug
-        name = params[:name]
-        if name.present?
-            products = Product.where("name LIKE ?", "%#{name}%")
-            render json: {result: products}
-        else
-            render json: {error: "No record found for given name."}
-        end
-    end
-    
-    def search_by_brand_name
-        # byebug
-        brand = params[:brand_name]
-        if brand.present?
-            products = Product.where("brand_name LIKE ?", "%#{brand}%")
-            render json: {result: products}
-        else
-            render json: {error: "No product is available for this brand."}
-        end
-    end
-    
-    
-end
+  end
+  

@@ -16,7 +16,7 @@ gem "sqlite3", "~> 1.4"
 gem "puma", "~> 5.0"
 
 gem 'email_validator'
-
+gem 'active_model_serializers'
 gem "byebug"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"

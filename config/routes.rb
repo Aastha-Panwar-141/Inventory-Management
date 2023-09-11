@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   # root "articles#index"
   # get '/search/:name'=>'products#search'
   
+  get 'users/vendors', to: 'users#show_vendor'
+  get 'users/customers', to: 'users#show_customer'
+
   
   resources :users do
     member do
@@ -29,7 +32,8 @@ Rails.application.routes.draw do
   resources :products
   resources :product_variants
   resources :carts
+
   
-  # get 'products/search' to: 'products#search'
+  # get 'products/search', to: 'products#search'
   
 end

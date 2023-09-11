@@ -10,8 +10,20 @@ class UsersController < ApplicationController
   
   # GET /users/:id
   def show
+    # render json: {result: @user}, include: ['vendor']
     render json: {result: @user}
   end
+
+  def show_vendor
+    vendor = User.where(user_type: 'Vendor')
+    render json: vendor
+  end
+
+  def show_customer
+    customer = User.where(user_type: 'Customer')
+    render json: customer
+  end
+
   
   # POST /users
   def create

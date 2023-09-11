@@ -4,12 +4,14 @@ class CartsController < ApplicationController
     # GET /carts
     def index
         carts = Cart.all 
-        render json: {result: carts}
+        # render json: {result: carts}
+        render json: carts
     end
         
     # GET /carts/:id
     def show
-        render json: {result: @cart}
+        # render json: {result: @cart}
+        render json: @cart
     end
     
     # POST /carts
