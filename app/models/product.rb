@@ -2,6 +2,7 @@ class Product < ApplicationRecord
   validates :name, :brand_name, presence: true
   belongs_to :vendor
   has_many :product_variants, dependent: :destroy
+  has_one_attached :avatar
   
   after_create :product_created
   after_create do

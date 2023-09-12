@@ -19,6 +19,8 @@ class ProductsController < ApplicationController
         # byebug
         product = Product.new(product_params)
         if product.save
+            product.avatar.attach(params[:avatar])
+            # render json: product.avatar.attach(params[:avatar])
             render json: {result: "Product created successfully!",created_record: product }, status: 201  #created 
         else
             render json: product.errors, status: :unprocessable_entity  #422 status code
@@ -75,7 +77,7 @@ class ProductsController < ApplicationController
     
     # Only allow a trusted parameter "white list" through.
     def product_params
-        params.require(:product).permit(:vendor_id, :name, :brand_name)
+        params.permit(:vendor_id, :name, :brand_name, :avatar)
     end
     
   end
